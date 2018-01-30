@@ -33,9 +33,9 @@ class Bindings {
         CLibrary INSTANCE = (CLibrary)
             Native.loadLibrary("comcom", CLibrary.class);
 
-        public int init();
+        public int libcomcom_init();
 
-        public int run_command(
+        public int libcomcom_run_command(
                 byte[] input,
                 size_t input_len,
                 PointerByReference output,
@@ -45,6 +45,6 @@ class Bindings {
                 PointerByReference envp,
                 int timeout);
 
-        public int terminate();
+        public int libcomcom_terminate();
     }
 }

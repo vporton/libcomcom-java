@@ -1,12 +1,82 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "org.portonvictor"
+archivesBaseName = "libcomcom-java"
+version = "0.0.1"
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'libcomcom-java'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'Java wrapper for libcomcom (run OS commands with given input and receive its output).'
+        url 'https://github.com/vporton/libcomcom-java'
+
+        scm {
+          connection 'scm:git:git://github.com:vporton/libcomcom-java.git'
+          developerConnection 'scm:git:git://github.com:vporton/libcomcom-java.git'
+          url 'https://github.com/vporton/libcomcom-java'
+        }
+
+        licenses {
+          license {
+            name 'GNU Lesser General Public License, Version 3'
+            url 'https://www.gnu.org/licenses/lgpl.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'porton'
+            name 'Victor Porton'
+            email 'porton@narod.ru'
+          }
+        }
+      }
+    }
+  }
+}
+
 dependencies {
     compile group: 'com.sun.jna', name: 'jna', version: '3.0.9'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile group: 'org.portonvictor', name: 'errno-java', version: '0.0.2'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 compileJava {
