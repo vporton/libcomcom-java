@@ -1,0 +1,6 @@
+Java wrapper for libcomcom.
+
+This package is not yet released.
+
+You are recommended to use this library with Java signal chaining:
+https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/signals003.html
